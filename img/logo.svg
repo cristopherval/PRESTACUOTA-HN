@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PrestaCuota HN">
+  <rect width="64" height="64" rx="14" fill="#059669"/>
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Moneda -->
+    <ellipse cx="32" cy="16" rx="11.5" ry="5.6"/>
+    <path d="M20.5 16 V19.5 A11.5 5.6 0 0 0 43.5 19.5 V16"/>
+    <!-- Símbolo de dólar -->
+    <path d="M32 10 V22.5"/>
+    <path d="M36 12.9 C36 10.9 28 10.9 28 13.9 C28 16.4 36 16 36 18.6 C36 21.6 28 21.6 28 19.5"/>
+    <!-- Mano abierta con dedos y pulgar -->
+    <path d="M11 31 C13 28 17 28 19 31 C21 28 25 28 27 31 C34 29 41 29 45 32 C47 28 51 29 51 33 C51 40 43 45 31 45 C19 45 12 40 11 33 Z"/>
+    <!-- Línea de la palma -->
+    <path d="M19 31 C26 34 40 34 45 32"/>
+  </g>
+</svg>
