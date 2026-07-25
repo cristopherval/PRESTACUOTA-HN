@@ -540,6 +540,18 @@ html, body {
   .carousel-clone { display: none !important; }
 }
 
+/* Planes más compactos en celular */
+@media (max-width: 640px) {
+  .carousel-track > * { flex-basis: 78%; }
+  .carousel-track > div { padding: 1.4rem; }
+  .carousel-track > div .text-5xl { font-size: 2.5rem; }
+  .carousel-track > div .text-6xl { font-size: 2.75rem; }
+  .carousel-track > div .mt-6 { margin-top: 0.9rem; }
+  .carousel-track > div .mt-7 { margin-top: 1rem; }
+  .carousel-track > div .mt-8 { margin-top: 1.1rem; }
+  .carousel-track > div ul.mt-7 > li { font-size: 0.8rem; }
+}
+
 /* ============================================================
    Marquee (opiniones que se mueven solas + arrastrables con el dedo)
    ============================================================ */
