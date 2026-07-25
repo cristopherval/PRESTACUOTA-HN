@@ -4,8 +4,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ---------- Carrusel infinito (planes y testimonios en celular) ----------
-  const mqCarousel = window.matchMedia('(max-width: 1023px)');
+  // ---------- Carrusel infinito con auto-desplazamiento (planes y testimonios) ----------
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   document.querySelectorAll('[data-carousel]').forEach((track) => {
     const originals = Array.from(track.children);
@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     originals.forEach((el) => track.appendChild(cloneCard(el)));        // set posterior
     originals.slice().reverse().forEach((el) => track.insertBefore(cloneCard(el), track.firstChild)); // set anterior
 
-    // Controles: flechas + puntos (solo visibles en celular vía .lg\:hidden)
+    // Controles: flechas + puntos (visibles en todos los tamaños)
     const nav = document.createElement('div');
-    nav.className = 'carousel-nav lg:hidden';
+    nav.className = 'carousel-nav';
     const prev = document.createElement('button');
     prev.type = 'button';
     prev.className = 'carousel-arrow';
@@ -91,25 +91,48 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 130);
     }, { passive: true });
 
-    prev.addEventListener('click', () => track.scrollBy({ left: -cardStep, behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: cardStep, behavior: 'smooth' }));
+    // ----- Auto-desplazamiento (pausa al interactuar / hover / pestaña oculta) -----
+    let autoTimer = null;
+    const AUTO_MS = 4500;
+    const startAuto = () => {
+      if (reduceMotion || autoTimer) return;
+      autoTimer = setInterval(() => {
+        track.scrollBy({ left: cardStep, behavior: 'smooth' });
+      }, AUTO_MS);
+    };
+    const stopAuto = () => { clearInterval(autoTimer); autoTimer = null; };
+    const restartAuto = () => { stopAuto(); startAuto(); };
+
+    const goPrev = () => { track.scrollBy({ left: -cardStep, behavior: 'smooth' }); restartAuto(); };
+    const goNext = () => { track.scrollBy({ left: cardStep, behavior: 'smooth' }); restartAuto(); };
+    prev.addEventListener('click', goPrev);
+    next.addEventListener('click', goNext);
     dots.forEach((d, i) => d.addEventListener('click', () => {
       track.scrollTo({ left: setWidth + i * cardStep, behavior: 'smooth' });
+      restartAuto();
     }));
 
-    let started = false;
-    const sync = () => {
-      if (mqCarousel.matches) {
-        // (re)centrar al entrar a modo celular o al cambiar tamaño
-        requestAnimationFrame(center);
-        started = true;
-      } else {
-        started = false;
-      }
-    };
-    sync();
-    window.addEventListener('resize', () => requestAnimationFrame(sync));
-    window.addEventListener('load', () => { if (mqCarousel.matches) center(); });
+    // Pausas
+    track.addEventListener('mouseenter', stopAuto);
+    track.addEventListener('mouseleave', startAuto);
+    track.addEventListener('pointerdown', stopAuto);
+    track.addEventListener('touchstart', stopAuto, { passive: true });
+    track.addEventListener('touchend', restartAuto, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopAuto(); else startAuto();
+    });
+
+    // Init + recalcular al cambiar tamaño / cargar imágenes
+    const init = () => { center(); };
+    requestAnimationFrame(init);
+    window.addEventListener('load', () => { center(); startAuto(); });
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(center, 150);
+    });
+
+    startAuto();
   });
 
   // ---------- Menú móvil ----------

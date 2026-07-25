@@ -518,26 +518,29 @@ html, body {
 /* ============================================================
    Carrusel (planes y testimonios en celular)
    ============================================================ */
-/* En celular/tablet: deslizamiento horizontal con snap */
-@media (max-width: 1023px) {
-  .carousel-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    scroll-padding-inline: 7.5%;
-    padding-bottom: 4px;
-  }
-  .carousel-track::-webkit-scrollbar { display: none; }
-  .carousel-track > * {
-    flex: 0 0 85%;
-    scroll-snap-align: center;
-  }
+/* Deslizamiento horizontal con snap (en TODOS los tamaños) */
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-padding-inline: 7.5%;
+  padding-bottom: 4px;
 }
-/* En escritorio ocultamos los clones del carrusel infinito */
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track > * {
+  flex: 0 0 85%;
+  scroll-snap-align: center;
+}
+/* Tablet: ~2 tarjetas visibles */
+@media (min-width: 640px) {
+  .carousel-track > * { flex-basis: 55%; }
+}
+/* Escritorio: ~3 tarjetas visibles, con movimiento */
 @media (min-width: 1024px) {
-  .carousel-clone { display: none !important; }
+  .carousel-track { scroll-padding-inline: 0; }
+  .carousel-track > * { flex-basis: 31.5%; }
 }
 
 /* Controles (flechas + puntos) */
