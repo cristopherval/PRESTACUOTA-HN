@@ -541,35 +541,36 @@ html, body {
 }
 
 /* ============================================================
-   Marquee (opiniones que se mueven solas horizontalmente)
+   Marquee (opiniones que se mueven solas + arrastrables con el dedo)
    ============================================================ */
 .marquee {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  scrollbar-width: none;           /* Firefox: sin barra */
+  -ms-overflow-style: none;        /* Edge viejo: sin barra */
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
+.marquee::-webkit-scrollbar { display: none; height: 0; } /* Chrome/Safari: sin barra */
+.marquee.dragging { cursor: grabbing; }
 .marquee-track {
   display: flex;
   gap: 1.5rem;
   width: max-content;
-  will-change: transform;
-  animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
 }
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-.marquee-track > * {
-  flex: 0 0 340px;
-  max-width: 85vw;
-}
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-  .marquee { -webkit-mask-image: none; mask-image: none; overflow-x: auto; }
+.marquee-track > * { flex: 0 0 340px; }
+
+/* Opiniones más chicas en celular */
+@media (max-width: 640px) {
+  .marquee-track { gap: 1rem; }
+  .marquee-track > figure { flex-basis: 250px; padding: 1.25rem; }
+  .marquee-track > figure blockquote { font-size: 0.8rem; line-height: 1.5; }
+  .marquee-track > figure figcaption { margin-top: 0.85rem; }
+  .marquee-track > figure figcaption img { width: 2.25rem; height: 2.25rem; }
+  .marquee-track > figure figcaption p:first-child { font-size: 0.8rem; }
 }
 
 /* Controles (flechas + puntos) */
