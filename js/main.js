@@ -4,6 +4,114 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ---------- Carrusel infinito (planes y testimonios en celular) ----------
+  const mqCarousel = window.matchMedia('(max-width: 1023px)');
+
+  document.querySelectorAll('[data-carousel]').forEach((track) => {
+    const originals = Array.from(track.children);
+    const count = originals.length;
+    if (count < 2) return;
+
+    // Clonar el set completo antes y después → efecto infinito en ambos sentidos
+    const cloneCard = (el) => {
+      const c = el.cloneNode(true);
+      c.classList.add('carousel-clone');
+      c.classList.remove('reveal', 'visible');
+      c.removeAttribute('data-reveal');
+      c.removeAttribute('data-delay');
+      c.style.opacity = '1';
+      c.style.transform = 'none';
+      c.setAttribute('aria-hidden', 'true');
+      return c;
+    };
+    originals.forEach((el) => track.appendChild(cloneCard(el)));        // set posterior
+    originals.slice().reverse().forEach((el) => track.insertBefore(cloneCard(el), track.firstChild)); // set anterior
+
+    // Controles: flechas + puntos (solo visibles en celular vía .lg\:hidden)
+    const nav = document.createElement('div');
+    nav.className = 'carousel-nav lg:hidden';
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'carousel-arrow';
+    prev.setAttribute('aria-label', 'Anterior');
+    prev.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>';
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'carousel-arrow';
+    next.setAttribute('aria-label', 'Siguiente');
+    next.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>';
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'carousel-dots';
+    const dots = originals.map((_, i) => {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Ir al elemento ' + (i + 1));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+    nav.append(prev, dotsWrap, next);
+    track.after(nav);
+
+    let setWidth = 0;
+    let cardStep = 0;
+
+    const measure = () => {
+      const a = track.children[0].getBoundingClientRect();
+      const b = track.children[1].getBoundingClientRect();
+      cardStep = Math.round(b.left - a.left) || Math.round(a.width);
+      setWidth = cardStep * count;
+    };
+
+    const center = () => {
+      measure();
+      if (setWidth) track.scrollLeft = setWidth; // inicio del set del medio (originales)
+      updateDots();
+    };
+
+    const updateDots = () => {
+      if (!setWidth) return;
+      const rel = ((track.scrollLeft % setWidth) + setWidth) % setWidth;
+      const idx = Math.round(rel / cardStep) % count;
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    };
+
+    let idleTimer = null;
+    track.addEventListener('scroll', () => {
+      updateDots();
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (!setWidth) return;
+        // Reposición invisible para el bucle infinito (sin animación)
+        if (track.scrollLeft < setWidth * 0.5) {
+          track.scrollLeft += setWidth;
+        } else if (track.scrollLeft > setWidth * 1.5) {
+          track.scrollLeft -= setWidth;
+        }
+      }, 130);
+    }, { passive: true });
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -cardStep, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: cardStep, behavior: 'smooth' }));
+    dots.forEach((d, i) => d.addEventListener('click', () => {
+      track.scrollTo({ left: setWidth + i * cardStep, behavior: 'smooth' });
+    }));
+
+    let started = false;
+    const sync = () => {
+      if (mqCarousel.matches) {
+        // (re)centrar al entrar a modo celular o al cambiar tamaño
+        requestAnimationFrame(center);
+        started = true;
+      } else {
+        started = false;
+      }
+    };
+    sync();
+    window.addEventListener('resize', () => requestAnimationFrame(sync));
+    window.addEventListener('load', () => { if (mqCarousel.matches) center(); });
+  });
+
   // ---------- Menú móvil ----------
   const menuBtn = document.getElementById('menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -34,13 +142,19 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', closeMenu);
   });
 
-  // ---------- Sombra del header al hacer scroll ----------
+  // ---------- Sombra del header + botón flotante al hacer scroll ----------
   const header = document.getElementById('header');
+  const floatingCta = document.getElementById('floating-cta');
   const onScroll = () => {
-    if (window.scrollY > 10) {
+    const y = window.scrollY;
+    if (y > 10) {
       header.classList.add('shadow-lg', 'shadow-black/20');
     } else {
       header.classList.remove('shadow-lg', 'shadow-black/20');
+    }
+    // Mostrar el botón flotante al pasar el hero (~600px)
+    if (floatingCta) {
+      floatingCta.classList.toggle('visible', y > 600);
     }
   };
   window.addEventListener('scroll', onScroll, { passive: true });

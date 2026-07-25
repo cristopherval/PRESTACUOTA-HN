@@ -464,6 +464,129 @@ html, body {
 }
 
 /* ============================================================
+   Botón flotante "Empezá ahora"
+   ============================================================ */
+.floating-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10b981, #047857);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 12px 30px -8px rgba(4, 120, 87, 0.55);
+  /* Oculto hasta hacer scroll */
+  opacity: 0;
+  transform: translateY(28px) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+.floating-cta.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.floating-cta:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 16px 36px -8px rgba(4, 120, 87, 0.6);
+}
+.floating-cta svg {
+  width: 18px;
+  height: 18px;
+}
+/* Latido suave para llamar la atención */
+.floating-cta.visible svg {
+  animation: ctaPulse 1.8s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+@media (max-width: 380px) {
+  .floating-cta { padding: 0.8rem 1.1rem; font-size: 0.88rem; right: 0.75rem; bottom: 0.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-cta.visible svg { animation: none; }
+}
+
+/* ============================================================
+   Carrusel (planes y testimonios en celular)
+   ============================================================ */
+/* En celular/tablet: deslizamiento horizontal con snap */
+@media (max-width: 1023px) {
+  .carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-padding-inline: 7.5%;
+    padding-bottom: 4px;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-track > * {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+  }
+}
+/* En escritorio ocultamos los clones del carrusel infinito */
+@media (min-width: 1024px) {
+  .carousel-clone { display: none !important; }
+}
+
+/* Controles (flechas + puntos) */
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.carousel-arrow {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #059669;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 16px -8px rgba(2, 44, 34, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+  flex-shrink: 0;
+}
+.carousel-arrow:active { transform: scale(0.92); }
+.carousel-arrow svg { width: 20px; height: 20px; }
+
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+.carousel-dot.active {
+  width: 24px;
+  background: #10b981;
+}
+
+/* ============================================================
    Pasos (Cómo funciona)
    ============================================================ */
 .step {

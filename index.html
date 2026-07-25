@@ -506,35 +506,49 @@
         </div>
       </div>
 
-      <!-- Además... -->
-      <div class="mt-12 sm:mt-24 grid sm:grid-cols-2 lg:grid-cols-4 gap-5" data-stagger="100">
-        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
-          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <!-- Además... (collage / bento) -->
+      <div class="mt-12 sm:mt-24 grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:grid-rows-2" data-stagger="100">
+
+        <!-- Cualquier frecuencia — destacada, ancha -->
+        <div class="reveal relative overflow-hidden col-span-2 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-brand-600 to-brand-800 text-white flex flex-col justify-between min-h-[160px]" data-reveal="up">
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+          <span class="relative w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           </span>
-          <h4 class="font-bold text-ink-900">Cualquier frecuencia</h4>
-          <p class="mt-1 text-sm text-ink-500">Mensual, quincenal, semanal o diaria. Las cuotas se calculan solas, exactas al centavo.</p>
+          <div class="relative">
+            <h4 class="text-lg font-bold">Cualquier frecuencia</h4>
+            <p class="mt-1 text-sm text-brand-50 max-w-md">Mensual, quincenal, semanal o diaria. Las cuotas se calculan solas, exactas al centavo.</p>
+          </div>
         </div>
-        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
-          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+
+        <!-- Seguro en la nube — alta, oscura -->
+        <div class="reveal relative overflow-hidden col-span-2 lg:col-span-1 lg:row-span-2 rounded-3xl p-6 sm:p-8 bg-ink-950 text-white flex flex-col justify-between min-h-[160px]" data-reveal="up">
+          <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl"></div>
+          <span class="relative w-11 h-11 rounded-2xl bg-brand-500/20 text-brand-300 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
           </span>
-          <h4 class="font-bold text-ink-900">Seguro en la nube</h4>
-          <p class="mt-1 text-sm text-ink-500">Tus datos viven protegidos en la nube y podés exportar respaldos cuando querás.</p>
+          <div class="relative">
+            <h4 class="text-lg font-bold">Seguro en la nube</h4>
+            <p class="mt-1 text-sm text-ink-300">Tus datos viven protegidos en la nube y podés exportar respaldos cuando querás. Si cambiás de celular, tu información sigue ahí.</p>
+          </div>
         </div>
-        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
-          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+
+        <!-- Pensada para una mano -->
+        <div class="reveal col-span-1 rounded-3xl p-6 bg-white border border-ink-100 flex flex-col shadow-soft" data-reveal="up">
+          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
           </span>
           <h4 class="font-bold text-ink-900">Pensada para una mano</h4>
-          <p class="mt-1 text-sm text-ink-500">Diseñada para usarse con una mano en el celular, donde manejás tu negocio.</p>
+          <p class="mt-1 text-sm text-ink-500">Para usarse con una sola mano en el celular, donde manejás tu negocio.</p>
         </div>
-        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
-          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+
+        <!-- Se aprende en minutos -->
+        <div class="reveal col-span-1 rounded-3xl p-6 bg-brand-50 border border-brand-100 flex flex-col" data-reveal="up">
+          <span class="w-10 h-10 rounded-xl bg-white text-brand-600 flex items-center justify-center mb-3 shadow-soft">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </span>
           <h4 class="font-bold text-ink-900">Se aprende en minutos</h4>
-          <p class="mt-1 text-sm text-ink-500">Sin capacitación ni manuales. Te registrás y empezás a usarla de una vez.</p>
+          <p class="mt-1 text-sm text-ink-600">Sin capacitación ni manuales. Te registrás y empezás a usarla de una vez.</p>
         </div>
       </div>
     </div>
@@ -640,7 +654,7 @@
           <h3 class="text-2xl font-extrabold text-ink-900 tracking-tight">Lo que dicen los prestamistas</h3>
           <p class="mt-2 text-ink-500">Prestamistas que dejaron el cuaderno y no volverían atrás.</p>
         </div>
-        <div class="mt-8 grid md:grid-cols-3 gap-6" data-stagger="120">
+        <div class="carousel-track mt-8 lg:grid lg:grid-cols-3 gap-6" data-carousel data-stagger="120">
           <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
             <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
             <blockquote class="text-ink-600">"Antes pasaba los domingos cuadrando el cuaderno. Ahora abro la app, veo quién me paga hoy y les mando el recordatorio por WhatsApp en dos toques. Recuperé mi fin de semana."</blockquote>
@@ -689,7 +703,7 @@
         <p class="mt-4 text-lg text-ink-500">Todo incluido, sin costos ocultos. Menos de lo que te cuesta un solo cobro perdido.</p>
       </div>
 
-      <div class="mt-12 grid lg:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto" data-stagger="120">
+      <div class="carousel-track mt-12 lg:grid lg:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto" data-carousel data-stagger="120">
 
         <!-- Plan 1: Prueba gratis -->
         <div class="reveal flex flex-col bg-white rounded-3xl p-8 border border-ink-100 shadow-soft" data-reveal="up">
@@ -943,6 +957,12 @@
       <p class="mt-8 text-center text-xs text-ink-500">© 2026 PrestaCuota HN. Todos los derechos reservados. Hecho con orgullo en Honduras 🇭🇳</p>
     </div>
   </footer>
+
+  <!-- Botón flotante: Empezá ahora -->
+  <a href="https://prestacuota.fitcore-hn.com" id="floating-cta" class="floating-cta" aria-label="Empezá ahora en PrestaCuota HN">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+    Empezá ahora
+  </a>
 
   <script src="js/main.js"></script>
 </body>
