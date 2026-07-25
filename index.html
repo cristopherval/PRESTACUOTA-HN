@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrestaCuota HN — Administrá tus préstamos desde el celular</title>
+  <meta name="description" content="La app más fácil para prestamistas. Cobrá en un toque por WhatsApp, mandá recibos profesionales en segundos y manejá toda tu cartera desde el celular. Prueba gratis 7 días, sin tarjeta." />
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50:  '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            ink: {
+              50:  '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            },
+          },
+          boxShadow: {
+            soft: '0 10px 40px -12px rgba(2, 44, 34, 0.18)',
+            phone: '0 30px 60px -20px rgba(2, 6, 23, 0.45)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Si el navegador no ejecuta JS, mostramos todo sin animación -->
+  <noscript>
+    <style>
+      .reveal, [data-reveal], .load-in {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        animation: none !important;
+      }
+    </style>
+  </noscript>
+</head>
+
+<body class="font-sans text-ink-800 bg-white antialiased">
+
+  <!-- ============ HEADER ============ -->
+  <header id="header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-ink-950/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2">
+          <span class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shadow-soft">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <span class="text-white font-bold text-lg tracking-tight">PrestaCuota <span class="text-brand-400">HN</span></span>
+        </a>
+
+        <!-- Nav escritorio -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink-300">
+          <a href="#funciones" class="hover:text-white transition-colors">Funciones</a>
+          <a href="#como-funciona" class="hover:text-white transition-colors">Cómo funciona</a>
+          <a href="#precio" class="hover:text-white transition-colors">Precio</a>
+          <a href="#faq" class="hover:text-white transition-colors">Preguntas</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="https://prestacuota.fitcore-hn.com" class="hidden sm:inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white text-sm font-bold px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+            Probar gratis 7 días
+          </a>
+          <!-- Hamburguesa -->
+          <button id="menu-btn" class="md:hidden w-10 h-10 flex items-center justify-center text-white" aria-label="Abrir menú" aria-expanded="false">
+            <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú móvil -->
+    <div id="mobile-menu" class="md:hidden hidden bg-ink-950/95 backdrop-blur-md border-t border-white/10">
+      <nav class="px-4 py-4 flex flex-col gap-1 text-ink-200 font-medium">
+        <a href="#funciones" class="mobile-link py-3 px-3 rounded-lg hover:bg-white/5">Funciones</a>
+        <a href="#como-funciona" class="mobile-link py-3 px-3 rounded-lg hover:bg-white/5">Cómo funciona</a>
+        <a href="#precio" class="mobile-link py-3 px-3 rounded-lg hover:bg-white/5">Precio</a>
+        <a href="#faq" class="mobile-link py-3 px-3 rounded-lg hover:bg-white/5">Preguntas</a>
+        <a href="https://prestacuota.fitcore-hn.com" class="mt-2 bg-brand-500 text-white text-center font-bold py-3 rounded-full">Probar gratis 7 días</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="relative overflow-hidden bg-ink-950 pt-28 pb-16 sm:pt-36 sm:pb-24 hero-bg">
+    <!-- Imagen de fondo sutil -->
+    <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1600&q=70"
+         alt="" aria-hidden="true" loading="lazy" onerror="this.remove()"
+         class="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-[0.07] mix-blend-luminosity" />
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+
+        <!-- Texto -->
+        <div class="text-center lg:text-left">
+          <span class="load-in inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/30 text-brand-300 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-6" style="--load-delay:80ms">
+            <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+            Prueba gratis 7 días · Sin tarjeta de crédito
+          </span>
+
+          <h1 class="load-in text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-white leading-[1.1] tracking-tight" style="--load-delay:160ms">
+            Cobrá en un toque y manejá tus préstamos
+            <span class="text-brand-400">desde el celular</span>
+          </h1>
+
+          <p class="load-in mt-5 text-lg sm:text-xl text-ink-300 leading-relaxed max-w-xl mx-auto lg:mx-0" style="--load-delay:260ms">
+            PrestaCuota HN te muestra quién paga hoy, te abre WhatsApp con el mensaje de cobro ya escrito y le manda a tu cliente un recibo profesional al instante. <strong class="text-white">Sin cuadernos. Sin Excel. Sin enredos.</strong>
+          </p>
+
+          <div class="load-in mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4" style="--load-delay:360ms">
+            <a href="https://prestacuota.fitcore-hn.com" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-400 text-white text-lg font-bold px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+              Probar gratis 7 días
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+            </a>
+            <a href="#como-funciona" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-ink-200 hover:text-white font-semibold px-6 py-4 rounded-full border border-white/15 hover:border-white/30 transition-colors">
+              Ver cómo funciona
+            </a>
+          </div>
+
+          <!-- Prueba social -->
+          <div class="load-in mt-7 flex items-center justify-center lg:justify-start gap-3" style="--load-delay:520ms">
+            <div class="flex -space-x-3">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="" loading="lazy" class="w-9 h-9 rounded-full object-cover ring-2 ring-ink-950" />
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="" loading="lazy" class="w-9 h-9 rounded-full object-cover ring-2 ring-ink-950" />
+              <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="" loading="lazy" class="w-9 h-9 rounded-full object-cover ring-2 ring-ink-950" />
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="" loading="lazy" class="w-9 h-9 rounded-full object-cover ring-2 ring-ink-950" />
+            </div>
+            <div class="text-left">
+              <div class="flex text-amber-400 text-sm leading-none">★★★★★</div>
+              <p class="text-xs text-ink-400 mt-1">Prestamistas que ya dejaron el cuaderno</p>
+            </div>
+          </div>
+
+          <!-- Chips de plataformas -->
+          <div class="load-in mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-ink-400" style="--load-delay:460ms">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Android
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              iPhone
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Computadora
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Se instala como app
+            </span>
+          </div>
+        </div>
+
+        <!-- Mockup del celular -->
+        <div class="flex justify-center lg:justify-end load-in" style="--load-delay:420ms">
+          <div class="phone floaty" style="--rot:2deg">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <!-- Header de la app -->
+              <div class="app-header">
+                <div>
+                  <p class="app-greet">Hola, Don Marcos 👋</p>
+                  <p class="app-date">Miércoles 16 de julio</p>
+                </div>
+                <span class="app-avatar">M</span>
+              </div>
+
+              <!-- Tarjeta resumen -->
+              <div class="app-summary">
+                <p class="app-summary-label">Por cobrar hoy</p>
+                <p class="app-summary-amount">L 4,250.00</p>
+                <p class="app-summary-sub">3 cuotas vencen hoy · 1 vencida</p>
+              </div>
+
+              <!-- Lista: vence hoy -->
+              <p class="app-section-title">Vence hoy</p>
+
+              <div class="app-row">
+                <div class="app-row-avatar" style="background:#dbeafe;color:#1d4ed8;">MR</div>
+                <div class="app-row-info">
+                  <p class="app-row-name">María Rodríguez</p>
+                  <p class="app-row-detail">Cuota 5 de 12 · L 1,500</p>
+                </div>
+                <button class="app-row-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.52 13.99c-.25.7-1.44 1.32-2.02 1.38-.52.05-1.18.07-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5-4.36-5.16-4.56-.15-.2-1.23-1.63-1.23-3.12 0-1.48.78-2.21 1.05-2.51.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.68.52.25.6.85 2.07.93 2.22.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.17.3.77 1.26 1.65 2.05 1.13 1 2.08 1.32 2.38 1.47.3.15.47.12.65-.07.17-.2.75-.87.94-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.12.08.72-.17 1.42z"/></svg>
+                  Recordar
+                </button>
+              </div>
+
+              <div class="app-row">
+                <div class="app-row-avatar" style="background:#fce7f3;color:#be185d;">JP</div>
+                <div class="app-row-info">
+                  <p class="app-row-name">José Perdomo</p>
+                  <p class="app-row-detail">Cuota 2 de 8 · L 1,250</p>
+                </div>
+                <button class="app-row-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.52 13.99c-.25.7-1.44 1.32-2.02 1.38-.52.05-1.18.07-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5-4.36-5.16-4.56-.15-.2-1.23-1.63-1.23-3.12 0-1.48.78-2.21 1.05-2.51.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.68.52.25.6.85 2.07.93 2.22.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.17.3.77 1.26 1.65 2.05 1.13 1 2.08 1.32 2.38 1.47.3.15.47.12.65-.07.17-.2.75-.87.94-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.12.08.72-.17 1.42z"/></svg>
+                  Recordar
+                </button>
+              </div>
+
+              <!-- Lista: vencidas -->
+              <p class="app-section-title" style="color:#dc2626;">Vencidas</p>
+
+              <div class="app-row app-row-late">
+                <div class="app-row-avatar" style="background:#fee2e2;color:#dc2626;">CA</div>
+                <div class="app-row-info">
+                  <p class="app-row-name">Carlos Aguilar</p>
+                  <p class="app-row-detail" style="color:#dc2626;">Venció hace 3 días · L 1,500</p>
+                </div>
+                <button class="app-row-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.52 13.99c-.25.7-1.44 1.32-2.02 1.38-.52.05-1.18.07-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5-4.36-5.16-4.56-.15-.2-1.23-1.63-1.23-3.12 0-1.48.78-2.21 1.05-2.51.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.68.52.25.6.85 2.07.93 2.22.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.17.3.77 1.26 1.65 2.05 1.13 1 2.08 1.32 2.38 1.47.3.15.47.12.65-.07.17-.2.75-.87.94-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.12.08.72-.17 1.42z"/></svg>
+                  Recordar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. DOLOR → SOLUCIÓN ============ -->
+  <section class="py-16 sm:py-24 bg-ink-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <!-- Foto de estilo de vida -->
+        <div class="reveal order-2 lg:order-1" data-reveal="left">
+          <div class="relative rounded-3xl overflow-hidden shadow-phone aspect-[4/3]">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80"
+                 alt="Prestamista revisando su negocio desde el celular" loading="lazy"
+                 onerror="this.closest('.relative').style.display='none'"
+                 class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink-950/40 to-transparent"></div>
+            <!-- Tarjeta flotante -->
+            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur rounded-2xl p-4 flex items-center gap-3 shadow-soft">
+              <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </span>
+              <div>
+                <p class="text-sm font-bold text-ink-900 leading-tight">Todo tu negocio en una app</p>
+                <p class="text-xs text-ink-500">Clientes, cuotas y cobros — en el bolsillo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Texto -->
+        <div class="reveal order-1 lg:order-2 text-center lg:text-left" data-reveal="right">
+          <span class="inline-block bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">El problema</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-ink-900 tracking-tight">¿Todavía manejás tus préstamos en un cuaderno?</h2>
+          <p class="mt-4 text-lg text-ink-500">El desorden no solo te quita tiempo. Te cuesta cobros olvidados, cuentas que no cuadran y clientes que se aprovechan. PrestaCuota HN pone orden en tu negocio y te hace ver profesional.</p>
+        </div>
+      </div>
+
+      <div class="mt-12 grid md:grid-cols-2 gap-6" data-stagger="120">
+        <!-- El caos -->
+        <div class="reveal bg-white rounded-3xl p-8 border border-red-100 shadow-soft" data-reveal="left">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="w-11 h-11 rounded-2xl bg-red-50 flex items-center justify-center">
+              <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-8.2 14.14A2 2 0 003.82 21h16.36a2 2 0 001.73-3l-8.2-14.14a2 2 0 00-3.42 0z"/></svg>
+            </span>
+            <h3 class="text-xl font-bold text-ink-900">Así se ve tu negocio hoy</h3>
+          </div>
+          <ul class="space-y-4 text-ink-600">
+            <li class="flex gap-3"><span class="text-red-400 font-bold mt-0.5">✗</span> Un cuaderno lleno de tachones que solo vos entendés</li>
+            <li class="flex gap-3"><span class="text-red-400 font-bold mt-0.5">✗</span> "¿Cuánto me debe fulano?" — y a hacer cuentas de nuevo</li>
+            <li class="flex gap-3"><span class="text-red-400 font-bold mt-0.5">✗</span> Cuotas que se te pasan porque nadie te avisó</li>
+            <li class="flex gap-3"><span class="text-red-400 font-bold mt-0.5">✗</span> Clientes que dicen "yo ya pagué" y no hay cómo probarlo</li>
+            <li class="flex gap-3"><span class="text-red-400 font-bold mt-0.5">✗</span> Horas escribiendo el mismo mensaje de cobro a cada uno</li>
+          </ul>
+        </div>
+
+        <!-- La solución -->
+        <div class="reveal bg-ink-950 rounded-3xl p-8 shadow-phone relative overflow-hidden" data-reveal="right">
+          <div class="absolute -top-20 -right-20 w-64 h-64 bg-brand-500/20 rounded-full blur-3xl"></div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="w-11 h-11 rounded-2xl bg-brand-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </span>
+              <h3 class="text-xl font-bold text-white">Así se ve con PrestaCuota HN</h3>
+            </div>
+            <ul class="space-y-4 text-ink-300">
+              <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">✓</span> Toda tu cartera ordenada en el bolsillo: clientes, préstamos, cuotas y pagos</li>
+              <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">✓</span> Abrís la app y ya sabés quién paga hoy y quién está atrasado</li>
+              <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">✓</span> Un toque y sale el mensaje de cobro por WhatsApp, ya escrito</li>
+              <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">✓</span> Cada pago queda registrado con su recibo numerado</li>
+              <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">✓</span> Números exactos al centavo, siempre cuadrados</li>
+            </ul>
+            <a href="https://prestacuota.fitcore-hn.com" class="mt-8 inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-bold px-6 py-3 rounded-full transition-all hover:-translate-y-0.5">
+              Probar gratis 7 días
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. LAS 3 ESTRELLAS ============ -->
+  <section id="funciones" class="py-16 sm:py-24 bg-white scroll-mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-600 font-bold text-sm uppercase tracking-widest">Lo que hace la diferencia</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-ink-900 tracking-tight">Tres funciones que te cambian el negocio</h2>
+        <p class="mt-4 text-lg text-ink-500">No necesitás cien funciones. Necesitás cobrar a tiempo, dar comprobantes y verte profesional.</p>
+      </div>
+
+      <!-- ★ 1: Recordatorios -->
+      <div class="mt-16 sm:mt-20 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div class="reveal" data-reveal="left">
+          <span class="inline-flex items-center gap-2 bg-brand-50 text-brand-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4">
+            <span class="text-base">★</span> Recordatorios en un toque
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-ink-900 tracking-tight">Cobrar deja de ser perseguir gente</h3>
+          <p class="mt-4 text-lg text-ink-500 leading-relaxed">
+            La app te muestra qué cuotas vencen hoy y cuáles ya están vencidas. Tocás <strong class="text-ink-800">un solo botón</strong> y se abre WhatsApp con el mensaje de cobro ya escrito: con el nombre del cliente, el monto y la fecha.
+          </p>
+          <ul class="mt-6 space-y-3 text-ink-600">
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Vista clara de cuotas de hoy y vencidas</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Mensaje personalizado con nombre, monto y fecha</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Las plantillas del mensaje las editás a tu gusto</li>
+          </ul>
+        </div>
+
+        <!-- Mockup chat WhatsApp -->
+        <div class="reveal flex justify-center" data-reveal="right">
+          <div class="wa-chat floaty" style="--rot:0deg">
+            <div class="wa-header">
+              <span class="wa-avatar">MR</span>
+              <div>
+                <p class="wa-name">María Rodríguez</p>
+                <p class="wa-status">en línea</p>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-day">Hoy</div>
+              <div class="wa-bubble">
+                <p>Hola María 👋</p>
+                <p class="mt-1">Le recordamos que su <strong>cuota #5</strong> de <strong>L 1,500.00</strong> vence <strong>hoy miércoles 16 de julio</strong>.</p>
+                <p class="mt-1">¡Gracias por su puntualidad! 🙏</p>
+                <span class="wa-time">10:32 ✓✓</span>
+              </div>
+              <div class="wa-bubble wa-bubble-in">
+                <p>¡Gracias por el recordatorio! Hoy paso a pagar 👍</p>
+                <span class="wa-time">10:35</span>
+              </div>
+            </div>
+            <div class="wa-footer">Enviado con un toque desde PrestaCuota HN</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ★ 2: Recibos -->
+      <div class="mt-20 sm:mt-28 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <!-- Mockup recibo -->
+        <div class="reveal flex justify-center order-2 lg:order-1" data-reveal="left">
+          <div class="receipt floaty" style="--rot:-1.5deg">
+            <div class="receipt-top">
+              <p class="receipt-biz">INVERSIONES MARCOS</p>
+              <p class="receipt-sub">Tegucigalpa, Honduras</p>
+            </div>
+            <div class="receipt-badge">RECIBO DE PAGO · N.º 000247</div>
+            <div class="receipt-rows">
+              <div class="receipt-row"><span>Cliente</span><strong>María Rodríguez</strong></div>
+              <div class="receipt-row"><span>Fecha</span><strong>16 / 07 / 2026</strong></div>
+              <div class="receipt-row"><span>Cuota</span><strong>5 de 12</strong></div>
+              <div class="receipt-row receipt-amount"><span>Monto pagado</span><strong>L 1,500.00</strong></div>
+              <div class="receipt-row"><span>Saldo pendiente</span><strong>L 10,500.00</strong></div>
+            </div>
+            <p class="receipt-thanks">¡Gracias por su pago puntual! 🙏</p>
+            <button class="receipt-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg>
+              Enviar por WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <div class="reveal order-1 lg:order-2" data-reveal="right">
+          <span class="inline-flex items-center gap-2 bg-brand-50 text-brand-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4">
+            <span class="text-base">★</span> Recibos profesionales
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-ink-900 tracking-tight">Tu cliente recibe su comprobante en segundos</h3>
+          <p class="mt-4 text-lg text-ink-500 leading-relaxed">
+            Al registrar un pago, la app genera automáticamente un <strong class="text-ink-800">recibo numerado con diseño profesional</strong>, listo para enviarse por WhatsApp como imagen. Se acabaron los "yo ya pagué": cada pago queda con su comprobante.
+          </p>
+          <ul class="mt-6 space-y-3 text-ink-600">
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Recibo numerado, generado al instante</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Se envía por WhatsApp como imagen, con un toque</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Tu negocio se ve serio y profesional en cada cobro</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ★ 3: Personalización -->
+      <div class="mt-20 sm:mt-28 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div class="reveal" data-reveal="left">
+          <span class="inline-flex items-center gap-2 bg-brand-50 text-brand-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4">
+            <span class="text-base">★</span> Todo personalizable
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-ink-900 tracking-tight">La app se adapta a tu gusto, no al revés</h3>
+          <p class="mt-4 text-lg text-ink-500 leading-relaxed">
+            El recibo lo armás como querés: qué campos mostrar, tamaño del texto, negrita, mensaje de agradecimiento — todo <strong class="text-ink-800">con vista previa en vivo</strong>. Los mensajes de cobro también son plantillas editables. Y con <strong class="text-ink-800">12 temas visuales</strong> (claros y oscuros), la app se siente tuya.
+          </p>
+          <ul class="mt-6 space-y-3 text-ink-600">
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Recibo a tu medida, con vista previa en vivo</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Plantillas de mensajes de cobro editables</li>
+            <li class="flex gap-3"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 12 temas visuales: claros y oscuros</li>
+          </ul>
+        </div>
+
+        <!-- Mockup ajustes / temas -->
+        <div class="reveal flex justify-center" data-reveal="right">
+          <div class="settings-card floaty" style="--rot:0deg">
+            <p class="settings-title">Personalizar recibo</p>
+
+            <div class="settings-row">
+              <span>Mostrar saldo pendiente</span>
+              <span class="toggle toggle-on"><span class="toggle-dot"></span></span>
+            </div>
+            <div class="settings-row">
+              <span>Texto en negrita</span>
+              <span class="toggle toggle-on"><span class="toggle-dot"></span></span>
+            </div>
+            <div class="settings-row">
+              <span>Mensaje de agradecimiento</span>
+              <span class="toggle toggle-on"><span class="toggle-dot"></span></span>
+            </div>
+            <div class="settings-row settings-row-col">
+              <span>Tamaño del texto</span>
+              <div class="slider"><div class="slider-fill"></div><div class="slider-knob"></div></div>
+            </div>
+
+            <p class="settings-title" style="margin-top:1.25rem;">Tema de la app</p>
+            <div class="theme-grid">
+              <span class="theme-dot active" style="background:#10b981;"></span>
+              <span class="theme-dot" style="background:#3b82f6;"></span>
+              <span class="theme-dot" style="background:#8b5cf6;"></span>
+              <span class="theme-dot" style="background:#ec4899;"></span>
+              <span class="theme-dot" style="background:#f59e0b;"></span>
+              <span class="theme-dot" style="background:#ef4444;"></span>
+              <span class="theme-dot theme-dark" style="background:#064e3b;"></span>
+              <span class="theme-dot theme-dark" style="background:#1e3a8a;"></span>
+              <span class="theme-dot theme-dark" style="background:#4c1d95;"></span>
+              <span class="theme-dot theme-dark" style="background:#831843;"></span>
+              <span class="theme-dot theme-dark" style="background:#78350f;"></span>
+              <span class="theme-dot theme-dark" style="background:#0f172a;"></span>
+            </div>
+
+            <div class="settings-preview">
+              <p class="settings-preview-label">Vista previa en vivo</p>
+              <div class="settings-preview-receipt">
+                <p style="font-weight:800;">RECIBO N.º 000247</p>
+                <p>María Rodríguez · L 1,500.00</p>
+                <p style="color:#059669;">¡Gracias por su pago puntual! 🙏</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Además... -->
+      <div class="mt-20 sm:mt-24 grid sm:grid-cols-2 lg:grid-cols-4 gap-5" data-stagger="100">
+        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
+          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </span>
+          <h4 class="font-bold text-ink-900">Cualquier frecuencia</h4>
+          <p class="mt-1 text-sm text-ink-500">Mensual, quincenal, semanal o diaria. Las cuotas se calculan solas, exactas al centavo.</p>
+        </div>
+        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
+          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+          </span>
+          <h4 class="font-bold text-ink-900">Seguro en la nube</h4>
+          <p class="mt-1 text-sm text-ink-500">Tus datos viven protegidos en la nube y podés exportar respaldos cuando querás.</p>
+        </div>
+        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
+          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </span>
+          <h4 class="font-bold text-ink-900">Pensada para una mano</h4>
+          <p class="mt-1 text-sm text-ink-500">Diseñada para usarse con una mano en el celular, donde manejás tu negocio.</p>
+        </div>
+        <div class="reveal bg-ink-50 rounded-2xl p-6 border border-ink-100" data-reveal="zoom">
+          <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </span>
+          <h4 class="font-bold text-ink-900">Se aprende en minutos</h4>
+          <p class="mt-1 text-sm text-ink-500">Sin capacitación ni manuales. Te registrás y empezás a usarla de una vez.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. CÓMO FUNCIONA ============ -->
+  <section id="como-funciona" class="py-16 sm:py-24 bg-ink-950 relative overflow-hidden scroll-mt-16">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-brand-500/10 rounded-full blur-3xl"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-400 font-bold text-sm uppercase tracking-widest">Así de simple</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Tu día de cobros en 3 pasos</h2>
+      </div>
+
+      <div class="mt-14 grid md:grid-cols-3 gap-8 steps" data-stagger="140">
+        <div class="reveal step" data-reveal="up">
+          <span class="step-number">1</span>
+          <h3 class="mt-5 text-xl font-bold text-white">Registrá el cliente y su préstamo</h3>
+          <p class="mt-3 text-ink-400 leading-relaxed">Nombre, monto, frecuencia y listo. La app calcula todas las cuotas automáticamente, exactas al centavo.</p>
+          <!-- Mini-visual: formulario -->
+          <div class="step-mock">
+            <div class="step-mock-field"><span>Cliente</span><b>María Rodríguez</b></div>
+            <div class="step-mock-field"><span>Monto</span><b>L 18,000</b></div>
+            <div class="step-mock-field"><span>Frecuencia</span><b>Mensual · 12</b></div>
+            <div class="step-mock-btn">Guardar préstamo</div>
+          </div>
+        </div>
+        <div class="reveal step" data-reveal="up">
+          <span class="step-number">2</span>
+          <h3 class="mt-5 text-xl font-bold text-white">La app te dice quién paga hoy</h3>
+          <p class="mt-3 text-ink-400 leading-relaxed">Abrís la app y ves de un vistazo las cuotas que vencen hoy y las que ya están vencidas. Nada se te escapa.</p>
+          <!-- Mini-visual: lista de cobros -->
+          <div class="step-mock">
+            <div class="step-mock-row"><span class="dot dot-green"></span>María R. · L 1,500<em class="tag tag-hoy">Hoy</em></div>
+            <div class="step-mock-row"><span class="dot dot-green"></span>José P. · L 1,250<em class="tag tag-hoy">Hoy</em></div>
+            <div class="step-mock-row"><span class="dot dot-red"></span>Carlos A. · L 1,500<em class="tag tag-late">Vencida</em></div>
+          </div>
+        </div>
+        <div class="reveal step" data-reveal="up">
+          <span class="step-number">3</span>
+          <h3 class="mt-5 text-xl font-bold text-white">Cobrá, registrá y mandá el recibo</h3>
+          <p class="mt-3 text-ink-400 leading-relaxed">Recordatorio por WhatsApp en un toque, registrás el pago y el recibo profesional le llega al cliente al instante.</p>
+          <!-- Mini-visual: recibo enviado -->
+          <div class="step-mock">
+            <div class="step-mock-receipt">
+              <p class="step-mock-rnum">RECIBO N.º 000247</p>
+              <p class="step-mock-rname">María Rodríguez</p>
+              <p class="step-mock-ramount">L 1,500.00 · PAGADO</p>
+            </div>
+            <div class="step-mock-btn step-mock-btn-wa">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg>
+              Enviado por WhatsApp ✓
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 text-center reveal">
+        <a href="https://prestacuota.fitcore-hn.com" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white text-lg font-bold px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+          Probar gratis 7 días
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+        </a>
+        <p class="mt-3 text-sm text-ink-400">Registrarte toma un minuto y entrás directo a usar la app.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. CONFIANZA ============ -->
+  <section class="py-16 sm:py-24 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-600 font-bold text-sm uppercase tracking-widest">Tranquilidad</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-ink-900 tracking-tight">Tu cartera, segura y siempre cuadrada</h2>
+      </div>
+
+      <div class="mt-12 grid md:grid-cols-3 gap-6" data-stagger="110">
+        <div class="reveal bg-ink-50 rounded-3xl p-8 border border-ink-100 text-center" data-reveal="up">
+          <span class="w-14 h-14 mx-auto rounded-2xl bg-brand-100 text-brand-700 flex items-center justify-center mb-5">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v2h8z"/></svg>
+          </span>
+          <h3 class="text-lg font-bold text-ink-900">Datos seguros en la nube</h3>
+          <p class="mt-2 text-ink-500">Si perdés o cambiás de celular, tu información sigue ahí. Entrás con tu cuenta y seguís trabajando.</p>
+        </div>
+        <div class="reveal bg-ink-50 rounded-3xl p-8 border border-ink-100 text-center" data-reveal="up">
+          <span class="w-14 h-14 mx-auto rounded-2xl bg-brand-100 text-brand-700 flex items-center justify-center mb-5">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </span>
+          <h3 class="text-lg font-bold text-ink-900">Respaldos exportables</h3>
+          <p class="mt-2 text-ink-500">Tus datos son tuyos. Exportá un respaldo completo de tu cartera cuando querás, con un toque.</p>
+        </div>
+        <div class="reveal bg-ink-50 rounded-3xl p-8 border border-ink-100 text-center" data-reveal="up">
+          <span class="w-14 h-14 mx-auto rounded-2xl bg-brand-100 text-brand-700 flex items-center justify-center mb-5">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </span>
+          <h3 class="text-lg font-bold text-ink-900">Exactos al centavo</h3>
+          <p class="mt-2 text-ink-500">Cada cuota, cada abono y cada saldo calculado automáticamente. Los números siempre cuadran.</p>
+        </div>
+      </div>
+
+      <!-- Testimonios -->
+      <div class="mt-16 sm:mt-20">
+        <div class="text-center reveal">
+          <h3 class="text-2xl font-extrabold text-ink-900 tracking-tight">Lo que dicen los prestamistas</h3>
+          <p class="mt-2 text-ink-500">Prestamistas que dejaron el cuaderno y no volverían atrás.</p>
+        </div>
+        <div class="mt-8 grid md:grid-cols-3 gap-6" data-stagger="120">
+          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
+            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+            <blockquote class="text-ink-600">"Antes pasaba los domingos cuadrando el cuaderno. Ahora abro la app, veo quién me paga hoy y les mando el recordatorio por WhatsApp en dos toques. Recuperé mi fin de semana."</blockquote>
+            <figcaption class="mt-5 flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Marvin Cálix" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+              <div>
+                <p class="font-bold text-ink-900 text-sm">Marvin Cálix</p>
+                <p class="text-xs text-ink-400">Prestamista · Comayagüela, HN</p>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
+            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+            <blockquote class="text-ink-600">"El primer recibo que le mandé a una clienta por WhatsApp me preguntó si ya tenía oficina. Se acabaron los reclamos de 'yo ya pagué'; todo queda con su comprobante. Mi negocio se ve serio."</blockquote>
+            <figcaption class="mt-5 flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Rosa Lagos" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+              <div>
+                <p class="font-bold text-ink-900 text-sm">Rosa Lagos</p>
+                <p class="text-xs text-ink-400">Inversiones familiares · San Pedro Sula, HN</p>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
+            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+            <blockquote class="text-ink-600">"Yo no soy de tecnología y en una tarde ya la tenía funcionando con todos mis clientes. Los números siempre cuadran al centavo y manejo todo desde el celular. La mejor decisión para mi negocio."</blockquote>
+            <figcaption class="mt-5 flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Josué Enamorado" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+              <div>
+                <p class="font-bold text-ink-900 text-sm">Josué Enamorado</p>
+                <p class="text-xs text-ink-400">Préstamos personales · Danlí, HN</p>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="mt-6 text-center text-xs text-ink-400 reveal">Reseñas de muestra con fines ilustrativos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRECIO ============ -->
+  <section id="precio" class="py-16 sm:py-24 bg-ink-50 scroll-mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-600 font-bold text-sm uppercase tracking-widest">Precio simple</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-ink-900 tracking-tight">Empezá gratis. Pagá cuando te convenza.</h2>
+        <p class="mt-4 text-lg text-ink-500">Todo incluido, sin costos ocultos. Menos de lo que te cuesta un solo cobro perdido.</p>
+      </div>
+
+      <div class="mt-12 grid lg:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto" data-stagger="120">
+
+        <!-- Plan 1: Prueba gratis -->
+        <div class="reveal flex flex-col bg-white rounded-3xl p-8 border border-ink-100 shadow-soft" data-reveal="up">
+          <span class="inline-block w-fit bg-ink-100 text-ink-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full">Prueba gratis</span>
+          <div class="mt-6 flex items-end gap-2">
+            <span class="text-5xl font-extrabold text-ink-900 tracking-tight">L 0</span>
+            <span class="text-ink-400 font-medium pb-1.5">/ 7 días</span>
+          </div>
+          <p class="mt-2 text-ink-500">Probala completa, sin tarjeta de crédito. Registrarte toma un minuto.</p>
+
+          <ul class="mt-7 space-y-3 text-ink-700 text-sm flex-1">
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Acceso a <strong>todas las funciones</strong> por 7 días</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Sin tarjeta · sin compromiso</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Entrás directo a usar la app</li>
+          </ul>
+
+          <a href="https://prestacuota.fitcore-hn.com" class="mt-8 flex items-center justify-center gap-2 w-full bg-ink-900 hover:bg-ink-800 text-white text-base font-bold py-3.5 rounded-full transition-all hover:-translate-y-0.5">
+            Empezá gratis
+          </a>
+        </div>
+
+        <!-- Plan 2: Mensual (destacado) -->
+        <div class="reveal relative flex flex-col bg-ink-950 rounded-3xl p-8 shadow-phone overflow-hidden lg:-mt-4 lg:mb-0 ring-2 ring-brand-500" data-reveal="up">
+          <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-brand-400 to-brand-600"></div>
+          <span class="absolute top-5 right-5 bg-brand-500 text-white text-[0.65rem] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">Más popular</span>
+
+          <span class="inline-block w-fit bg-brand-500/15 text-brand-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full">Mensual</span>
+          <div class="mt-6 flex items-end gap-2">
+            <span class="text-6xl font-extrabold text-white tracking-tight">L 599</span>
+            <span class="text-ink-400 font-medium pb-2">/ mes</span>
+          </div>
+          <p class="mt-2 text-ink-300">Todo incluido. Cancelá cuando querás, sin penalidades.</p>
+
+          <ul class="mt-7 space-y-3 text-ink-200 text-sm flex-1">
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Clientes, préstamos, cuotas y pagos <strong class="text-white">ilimitados</strong></li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Recordatorios de cobro por WhatsApp en un toque</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Recibos profesionales numerados y personalizables</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Datos seguros en la nube + respaldos exportables</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 12 temas · Android, iPhone y computadora</li>
+          </ul>
+
+          <a href="https://prestacuota.fitcore-hn.com" class="mt-8 flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-400 text-white text-lg font-bold py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+            Empezá gratis 7 días
+          </a>
+          <p class="mt-3 text-center text-sm text-ink-400 font-medium">Después L 599/mes · Sin tarjeta para probar</p>
+        </div>
+
+        <!-- Plan 3: Anual -->
+        <div class="reveal relative flex flex-col bg-white rounded-3xl p-8 border border-brand-200 shadow-soft overflow-hidden" data-reveal="up">
+          <span class="absolute top-5 right-5 bg-amber-100 text-amber-700 text-[0.65rem] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">2 meses gratis</span>
+          <span class="inline-block w-fit bg-brand-50 text-brand-700 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full">Anual</span>
+          <div class="mt-6 flex items-end gap-2">
+            <span class="text-5xl font-extrabold text-ink-900 tracking-tight">L 5,990</span>
+            <span class="text-ink-400 font-medium pb-1.5">/ año</span>
+          </div>
+          <p class="mt-2 text-ink-500">
+            Pagás <strong class="text-ink-800">10 meses y usás 12</strong>. Sale a
+            <strong class="text-brand-600">L 499/mes</strong>
+            <span class="text-ink-400 line-through">L 7,188</span>
+          </p>
+
+          <ul class="mt-7 space-y-3 text-ink-700 text-sm flex-1">
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> <strong>Todo lo del plan mensual</strong>, incluido</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> <strong>Ahorrás 2 meses</strong> al año (L 1,198)</li>
+            <li class="flex gap-2.5"><svg class="w-5 h-5 text-brand-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Un solo pago, tranquilo todo el año</li>
+          </ul>
+
+          <a href="https://prestacuota.fitcore-hn.com" class="mt-8 flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-400 text-white text-base font-bold py-3.5 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+            Empezá gratis 7 días
+          </a>
+          <p class="mt-3 text-center text-sm text-ink-400 font-medium">Elegís el plan anual al terminar la prueba</p>
+        </div>
+
+      </div>
+
+      <p class="mt-8 text-center text-sm text-ink-400 reveal">Todos los planes incluyen las mismas funciones. La prueba de 7 días no pide tarjeta de crédito.</p>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section id="faq" class="py-16 sm:py-24 bg-white scroll-mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+        <!-- Imagen: alguien feliz con su celular -->
+        <div class="reveal lg:sticky lg:top-24" data-reveal="left">
+          <div class="relative rounded-3xl overflow-hidden shadow-phone">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1000&q=80"
+                 alt="Prestamista feliz usando PrestaCuota HN en su celular" loading="lazy"
+                 onerror="this.closest('.relative').style.display='none'"
+                 class="w-full h-full object-cover aspect-[4/5]" />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink-950/50 via-transparent to-transparent"></div>
+            <!-- Tarjeta flotante -->
+            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur rounded-2xl p-4 flex items-center gap-3 shadow-soft floaty" style="--rot:0deg">
+              <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </span>
+              <div>
+                <p class="text-sm font-bold text-ink-900 leading-tight">Cobrar sin estrés</p>
+                <p class="text-xs text-ink-500">Todo tu negocio ordenado, en un toque</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna de preguntas -->
+        <div>
+      <div class="text-center lg:text-left reveal">
+        <span class="text-brand-600 font-bold text-sm uppercase tracking-widest">Preguntas frecuentes</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-ink-900 tracking-tight">Lo que todos preguntan antes de empezar</h2>
+      </div>
+
+      <div class="mt-10 space-y-4" data-stagger="80">
+        <div class="faq-item reveal" data-reveal="up">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Necesito instalar algo o comprar equipo?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>No. PrestaCuota HN es una aplicación web: entrás desde el navegador de tu celular o computadora y, si querés, la instalás como app con un toque. No ocupa casi espacio y siempre está actualizada.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Sirve en iPhone?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Sí. Funciona en Android, iPhone y computadora. En cualquiera de los tres podés instalarla como app y usarla igual que siempre.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Qué pasa cuando terminan los 7 días de prueba?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Si te gusta, activás tu plan de L 599 al mes y seguís exactamente donde quedaste, con todos tus datos. Si no, no pagás nada: la prueba no pide tarjeta de crédito, así que no hay cobros sorpresa.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Mis datos están seguros? ¿Quién los puede ver?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Tus datos viven seguros en la nube y solo vos accedés a ellos con tu cuenta. Además, podés exportar un respaldo completo de tu cartera cuando querás. Si perdés el celular, tu información no se pierde.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Puedo cancelar cuando quiera?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Sí, cuando querás y sin penalidades. No hay contratos ni permanencia mínima. Y antes de irte podés exportar el respaldo de todos tus datos.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Es difícil de aprender? Yo no soy bueno con la tecnología</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-a">
+            <p>Para nada. PrestaCuota HN está pensada para usarse con una mano en el celular y se aprende en minutos, sin capacitación ni manuales. Si usás WhatsApp, ya sabés lo suficiente.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de soporte -->
+      <div class="mt-10 reveal" data-reveal="up">
+        <div class="relative overflow-hidden bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-center shadow-phone">
+          <div class="absolute -top-16 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+          <div class="relative">
+            <span class="w-14 h-14 mx-auto rounded-2xl bg-white/15 flex items-center justify-center mb-4">
+              <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.52 13.99c-.25.7-1.44 1.32-2.02 1.38-.52.05-1.18.07-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5-4.36-5.16-4.56-.15-.2-1.23-1.63-1.23-3.12 0-1.48.78-2.21 1.05-2.51.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.68.52.25.6.85 2.07.93 2.22.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.17.3.77 1.26 1.65 2.05 1.13 1 2.08 1.32 2.38 1.47.3.15.47.12.65-.07.17-.2.75-.87.94-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.12.08.72-.17 1.42z"/></svg>
+            </span>
+            <h3 class="text-xl font-extrabold text-white">¿Te quedó otra duda?</h3>
+            <p class="mt-2 text-brand-50">Escribinos por WhatsApp y te respondemos rápido, sin robots.</p>
+            <a href="https://wa.me/50433644559" class="mt-5 inline-flex items-center gap-2 bg-white text-brand-700 font-bold px-6 py-3 rounded-full transition-all hover:-translate-y-0.5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg>
+              Escribir por WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+        </div><!-- /columna de preguntas -->
+      </div><!-- /grid -->
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA FINAL ============ -->
+  <section class="py-16 sm:py-24 bg-ink-950 relative overflow-hidden">
+    <div class="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-brand-500/15 rounded-full blur-3xl"></div>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center relative reveal">
+      <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+        Dejá el cuaderno.<br />
+        <span class="text-brand-400">Empezá a cobrar como profesional.</span>
+      </h2>
+      <p class="mt-5 text-lg sm:text-xl text-ink-300 max-w-xl mx-auto">
+        7 días gratis, sin tarjeta de crédito. Te registrás en un minuto y entrás directo a usar la app.
+      </p>
+      <a href="https://prestacuota.fitcore-hn.com" class="mt-9 inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white text-lg sm:text-xl font-bold px-10 py-5 rounded-full transition-all hover:-translate-y-0.5 shadow-soft">
+        Probar gratis 7 días
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+      </a>
+      <p class="mt-6 text-sm text-ink-400">
+        ¿Tenés preguntas? Escribinos por WhatsApp:
+        <a href="https://wa.me/50433644559" class="text-brand-400 font-semibold hover:text-brand-300">+504 3364-4559</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-ink-950 border-t border-white/10 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <a href="#" class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <span class="text-white font-bold">PrestaCuota <span class="text-brand-400">HN</span></span>
+        </a>
+
+        <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-400">
+          <a href="#funciones" class="hover:text-white transition-colors">Funciones</a>
+          <a href="#como-funciona" class="hover:text-white transition-colors">Cómo funciona</a>
+          <a href="#precio" class="hover:text-white transition-colors">Precio</a>
+          <a href="#faq" class="hover:text-white transition-colors">Preguntas</a>
+          <a href="https://wa.me/50433644559" class="hover:text-white transition-colors">WhatsApp</a>
+        </nav>
+      </div>
+      <p class="mt-8 text-center text-xs text-ink-500">© 2026 PrestaCuota HN. Todos los derechos reservados. Hecho con orgullo en Honduras 🇭🇳</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
