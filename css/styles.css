@@ -774,3 +774,45 @@ html, body {
   color: #64748b;
   line-height: 1.65;
 }
+
+/* ============================================================================
+   PLANES · efecto hover (solo desktop con mouse)
+   ----------------------------------------------------------------------------
+   Las 3 tarjetas arrancan claras. Al pasar el mouse por una, esa se agranda y
+   se pone oscura; las otras dos quedan claras. El flip de colores se hace
+   sobreescribiendo las clases de Tailwind SOLO dentro de .plan:hover, así el
+   estado normal (claro) queda intacto. En móvil no hay hover: no se activa.
+   ============================================================================ */
+.plan {
+  transition:
+    transform .3s cubic-bezier(.22, 1, .36, 1),
+    background-color .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
+  will-change: transform;
+}
+
+@media (hover: hover) and (min-width: 1024px) {
+  .plan:hover {
+    transform: scale(1.05);
+    z-index: 5;
+    background-color: #020617 !important;                 /* ink-950 */
+    border-color: transparent !important;
+    box-shadow: 0 30px 60px -20px rgba(2, 6, 23, .55) !important;
+  }
+
+  /* Textos: pasan a tonos claros legibles sobre el fondo oscuro */
+  .plan:hover .text-ink-900,
+  .plan:hover .text-ink-800 { color: #ffffff !important; }
+  .plan:hover .text-ink-700 { color: #e2e8f0 !important; } /* ink-200 */
+  .plan:hover .text-ink-600,
+  .plan:hover .text-ink-500 { color: #cbd5e1 !important; } /* ink-300 */
+  .plan:hover .text-brand-500 { color: #34d399 !important; } /* brand-400 */
+  .plan:hover .text-brand-600,
+  .plan:hover .text-brand-700 { color: #6ee7b7 !important; } /* brand-300 */
+
+  /* Píldoras y botón: se adaptan al fondo oscuro */
+  .plan:hover .bg-ink-100  { background-color: rgba(255, 255, 255, .10) !important; }
+  .plan:hover .bg-brand-50 { background-color: rgba(16, 185, 129, .18) !important; }
+  .plan:hover .bg-ink-900  { background-color: #10b981 !important; } /* CTA del plan gratis */
+}
