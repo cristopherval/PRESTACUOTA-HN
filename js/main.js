@@ -103,96 +103,82 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('load', () => { if (mqCarousel.matches) center(); });
   });
 
-  // ---------- Marquee de opiniones (se mueve solo + arrastrable con el dedo) ----------
+  // ---------- Marquee de opiniones (transform: se mueve solo + arrastrable) ----------
+  // Usa translateX en vez de scrollLeft → compatible con iOS Safari.
   document.querySelectorAll('[data-marquee]').forEach((viewport) => {
     const trackEl = viewport.querySelector('.marquee-track');
     if (!trackEl) return;
     const originals = Array.from(trackEl.children);
     if (originals.length < 2) return;
 
-    // Triplicar el set → permite arrastrar a ambos lados y bucle infinito
-    const cloneSet = () => originals.forEach((el) => {
-      const c = el.cloneNode(true);
-      c.setAttribute('aria-hidden', 'true');
-      trackEl.appendChild(c);
-    });
-    cloneSet();
-    cloneSet();
+    // Triplicar el set → suficiente ancho para llenar y hacer bucle sin cortes
+    for (let k = 0; k < 2; k++) {
+      originals.forEach((el) => {
+        const c = el.cloneNode(true);
+        c.setAttribute('aria-hidden', 'true');
+        trackEl.appendChild(c);
+      });
+    }
 
     let setWidth = 0;
     const measure = () => { setWidth = trackEl.scrollWidth / 3; };
-    // Mantener el scroll dentro del set del medio (bucle invisible)
-    const wrap = () => {
-      if (!setWidth) return;
-      if (viewport.scrollLeft >= setWidth * 2) viewport.scrollLeft -= setWidth;
-      else if (viewport.scrollLeft <= 0) viewport.scrollLeft += setWidth;
-    };
 
-    const SPEED = 0.5; // px por frame (~30 px/seg a 60fps)
+    let offset = 0;               // cuánto está desplazado hacia la izquierda (px)
+    const SPEED = 0.5;           // px por frame (~30 px/seg)
     let paused = false;
     let dragging = false;
-    let pos = 0; // posición con decimales (movimiento suave)
+    let startX = 0, startOffset = 0;
+
+    const apply = () => { trackEl.style.transform = 'translateX(' + (-offset) + 'px)'; };
+    const wrap = () => {
+      if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth; // mantener en [0, setWidth)
+    };
 
     const tick = () => {
       if (!paused && !dragging && setWidth) {
-        pos += SPEED;
-        if (pos >= setWidth * 2) pos -= setWidth;
-        viewport.scrollLeft = pos;
-      } else {
-        pos = viewport.scrollLeft; // sincronizar mientras el usuario controla
+        offset += SPEED;
+        if (offset >= setWidth) offset -= setWidth;
+        apply();
       }
       requestAnimationFrame(tick);
     };
 
-    // Pausa al pasar el mouse (PC)
-    viewport.addEventListener('mouseenter', () => { paused = true; });
-    viewport.addEventListener('mouseleave', () => { paused = false; });
-    // Pausa mientras se hace scroll táctil; retoma al soltar
-    let resumeTimer = null;
-    const pauseNow = () => { paused = true; clearTimeout(resumeTimer); };
-    const resumeSoon = () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { paused = false; }, 900); };
-    viewport.addEventListener('touchstart', pauseNow, { passive: true });
-    viewport.addEventListener('touchend', resumeSoon, { passive: true });
-    viewport.addEventListener('scroll', wrap, { passive: true });
-    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+    // Pausa al pasar el mouse (solo PC/mouse, nunca en táctil)
+    viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') paused = true; });
+    viewport.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') paused = false; });
 
-    // Arrastre con mouse (PC) — mover a izquierda/derecha con el cursor
-    let startX = 0, startScroll = 0;
+    // Arrastre (funciona con dedo y con mouse)
     viewport.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch') return; // el táctil ya usa scroll nativo
       dragging = true;
       viewport.classList.add('dragging');
       startX = e.clientX;
-      startScroll = viewport.scrollLeft;
-      viewport.setPointerCapture(e.pointerId);
+      startOffset = offset;
+      try { viewport.setPointerCapture(e.pointerId); } catch (_) {}
     });
     viewport.addEventListener('pointermove', (e) => {
       if (!dragging) return;
-      viewport.scrollLeft = startScroll - (e.clientX - startX);
+      offset = startOffset + (startX - e.clientX); // arrastrar a la izq. avanza
       wrap();
+      apply();
     });
     const endDrag = () => {
       if (!dragging) return;
-      dragging = false;
+      dragging = false;                 // al soltar, retoma el movimiento solo
       viewport.classList.remove('dragging');
-      resumeSoon();
     };
     viewport.addEventListener('pointerup', endDrag);
     viewport.addEventListener('pointercancel', endDrag);
-    viewport.addEventListener('mouseleave', endDrag);
 
-    // Arranque
-    const start = () => {
-      measure();
-      pos = setWidth;                 // empezar en el set del medio
-      viewport.scrollLeft = setWidth;
-    };
-    requestAnimationFrame(() => { start(); requestAnimationFrame(tick); });
-    window.addEventListener('load', start);
+    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+    measure();
+    apply();
+    requestAnimationFrame(tick);
+    window.addEventListener('load', () => { measure(); });
     let mResize = null;
     window.addEventListener('resize', () => {
       clearTimeout(mResize);
-      mResize = setTimeout(() => { measure(); wrap(); }, 200);
+      mResize = setTimeout(() => { measure(); wrap(); apply(); }, 200);
     });
   });
 

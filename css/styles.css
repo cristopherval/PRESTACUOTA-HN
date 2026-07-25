@@ -553,25 +553,22 @@ html, body {
 }
 
 /* ============================================================
-   Marquee (opiniones que se mueven solas + arrastrables con el dedo)
+   Marquee (opiniones): se mueven solas con transform + arrastre.
+   Sin scroll nativo ni mask → compatible con iOS Safari.
    ============================================================ */
 .marquee {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   width: 100%;
-  scrollbar-width: none;           /* Firefox: sin barra */
-  -ms-overflow-style: none;        /* Edge viejo: sin barra */
-  -webkit-overflow-scrolling: touch;
   cursor: grab;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  touch-action: pan-y;   /* el scroll vertical de la página sigue funcionando */
 }
-.marquee::-webkit-scrollbar { display: none; height: 0; } /* Chrome/Safari: sin barra */
 .marquee.dragging { cursor: grabbing; }
 .marquee-track {
   display: flex;
   gap: 1.5rem;
+  width: -webkit-max-content;
   width: max-content;
+  will-change: transform;
 }
 .marquee-track > * { flex: 0 0 340px; }
 
