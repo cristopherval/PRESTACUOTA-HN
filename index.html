@@ -649,45 +649,70 @@
       </div>
 
       <!-- Testimonios -->
-      <div class="mt-12 sm:mt-20">
+      <div id="opiniones" class="mt-12 sm:mt-20 scroll-mt-16">
         <div class="text-center reveal">
           <h3 class="text-2xl font-extrabold text-ink-900 tracking-tight">Lo que dicen los prestamistas</h3>
           <p class="mt-2 text-ink-500">Prestamistas que dejaron el cuaderno y no volverían atrás.</p>
         </div>
-        <div class="carousel-track mt-8 gap-6 items-stretch" data-carousel data-stagger="120">
-          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
-            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
-            <blockquote class="text-ink-600">"Antes pasaba los domingos cuadrando el cuaderno. Ahora abro la app, veo quién me paga hoy y les mando el recordatorio por WhatsApp en dos toques. Recuperé mi fin de semana."</blockquote>
-            <figcaption class="mt-5 flex items-center gap-3">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Marvin Cálix" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
-              <div>
-                <p class="font-bold text-ink-900 text-sm">Marvin Cálix</p>
-                <p class="text-xs text-ink-400">Prestamista · Comayagüela, HN</p>
-              </div>
-            </figcaption>
-          </figure>
-          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
-            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
-            <blockquote class="text-ink-600">"El primer recibo que le mandé a una clienta por WhatsApp me preguntó si ya tenía oficina. Se acabaron los reclamos de 'yo ya pagué'; todo queda con su comprobante. Mi negocio se ve serio."</blockquote>
-            <figcaption class="mt-5 flex items-center gap-3">
-              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Rosa Lagos" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
-              <div>
-                <p class="font-bold text-ink-900 text-sm">Rosa Lagos</p>
-                <p class="text-xs text-ink-400">Inversiones familiares · San Pedro Sula, HN</p>
-              </div>
-            </figcaption>
-          </figure>
-          <figure class="reveal bg-white rounded-3xl p-7 border border-ink-100 shadow-soft" data-reveal="up">
-            <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
-            <blockquote class="text-ink-600">"Yo no soy de tecnología y en una tarde ya la tenía funcionando con todos mis clientes. Los números siempre cuadran al centavo y manejo todo desde el celular. La mejor decisión para mi negocio."</blockquote>
-            <figcaption class="mt-5 flex items-center gap-3">
-              <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Josué Enamorado" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
-              <div>
-                <p class="font-bold text-ink-900 text-sm">Josué Enamorado</p>
-                <p class="text-xs text-ink-400">Préstamos personales · Danlí, HN</p>
-              </div>
-            </figcaption>
-          </figure>
+        <!-- Marquee: se mueven solas horizontalmente -->
+        <div class="marquee mt-8" data-marquee>
+          <div class="marquee-track">
+            <figure class="bg-white rounded-3xl p-7 border border-ink-100 shadow-soft">
+              <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+              <blockquote class="text-ink-600">"Antes pasaba los domingos cuadrando el cuaderno. Ahora abro la app, veo quién me paga hoy y les mando el recordatorio por WhatsApp en dos toques. Recuperé mi fin de semana."</blockquote>
+              <figcaption class="mt-5 flex items-center gap-3">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Marvin Cálix" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+                <div>
+                  <p class="font-bold text-ink-900 text-sm">Marvin Cálix</p>
+                  <p class="text-xs text-ink-400">Prestamista · Comayagüela, HN</p>
+                </div>
+              </figcaption>
+            </figure>
+            <figure class="bg-white rounded-3xl p-7 border border-ink-100 shadow-soft">
+              <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+              <blockquote class="text-ink-600">"El primer recibo que le mandé a una clienta por WhatsApp me preguntó si ya tenía oficina. Se acabaron los reclamos de 'yo ya pagué'; todo queda con su comprobante. Mi negocio se ve serio."</blockquote>
+              <figcaption class="mt-5 flex items-center gap-3">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Rosa Lagos" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+                <div>
+                  <p class="font-bold text-ink-900 text-sm">Rosa Lagos</p>
+                  <p class="text-xs text-ink-400">Inversiones familiares · San Pedro Sula, HN</p>
+                </div>
+              </figcaption>
+            </figure>
+            <figure class="bg-white rounded-3xl p-7 border border-ink-100 shadow-soft">
+              <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+              <blockquote class="text-ink-600">"Yo no soy de tecnología y en una tarde ya la tenía funcionando con todos mis clientes. Los números siempre cuadran al centavo y manejo todo desde el celular. La mejor decisión para mi negocio."</blockquote>
+              <figcaption class="mt-5 flex items-center gap-3">
+                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Josué Enamorado" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+                <div>
+                  <p class="font-bold text-ink-900 text-sm">Josué Enamorado</p>
+                  <p class="text-xs text-ink-400">Préstamos personales · Danlí, HN</p>
+                </div>
+              </figcaption>
+            </figure>
+            <figure class="bg-white rounded-3xl p-7 border border-ink-100 shadow-soft">
+              <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+              <blockquote class="text-ink-600">"Dejé el Excel y no lo extraño. Los recordatorios en un toque me subieron la cobranza; la gente paga más puntual cuando le llega su mensajito con nombre y monto."</blockquote>
+              <figcaption class="mt-5 flex items-center gap-3">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Karla Mejía" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+                <div>
+                  <p class="font-bold text-ink-900 text-sm">Karla Mejía</p>
+                  <p class="text-xs text-ink-400">Prestamista · La Ceiba, HN</p>
+                </div>
+              </figcaption>
+            </figure>
+            <figure class="bg-white rounded-3xl p-7 border border-ink-100 shadow-soft">
+              <div class="flex gap-1 text-amber-400 mb-3">★★★★★</div>
+              <blockquote class="text-ink-600">"Manejo como 80 clientes y antes vivía perdido. Ahora abro la app y en un vistazo sé quién me debe y quién paga hoy. Me cambió la forma de trabajar."</blockquote>
+              <figcaption class="mt-5 flex items-center gap-3">
+                <img src="https://randomuser.me/api/portraits/men/76.jpg" alt="Wilmer Discua" loading="lazy" class="w-11 h-11 rounded-full object-cover ring-2 ring-brand-100" />
+                <div>
+                  <p class="font-bold text-ink-900 text-sm">Wilmer Discua</p>
+                  <p class="text-xs text-ink-400">Créditos rápidos · Choluteca, HN</p>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
         </div>
         <p class="mt-6 text-center text-xs text-ink-400 reveal">Reseñas de muestra con fines ilustrativos.</p>
       </div>
@@ -703,7 +728,7 @@
         <p class="mt-4 text-lg text-ink-500">Todo incluido, sin costos ocultos. Menos de lo que te cuesta un solo cobro perdido.</p>
       </div>
 
-      <div class="carousel-track mt-12 gap-6 items-stretch max-w-5xl mx-auto" data-carousel data-stagger="120">
+      <div class="carousel-track mt-12 lg:grid lg:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto" data-carousel data-stagger="120">
 
         <!-- Plan 1: Prueba gratis -->
         <div class="reveal flex flex-col bg-white rounded-3xl p-8 border border-ink-100 shadow-soft" data-reveal="up">

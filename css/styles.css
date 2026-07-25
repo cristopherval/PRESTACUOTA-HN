@@ -518,29 +518,58 @@ html, body {
 /* ============================================================
    Carrusel (planes y testimonios en celular)
    ============================================================ */
-/* Deslizamiento horizontal con snap (en TODOS los tamaños) */
-.carousel-track {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  scroll-padding-inline: 7.5%;
-  padding-bottom: 4px;
+/* En celular/tablet: deslizamiento horizontal con snap */
+@media (max-width: 1023px) {
+  .carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-padding-inline: 7.5%;
+    padding-bottom: 4px;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-track > * {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+  }
 }
-.carousel-track::-webkit-scrollbar { display: none; }
-.carousel-track > * {
-  flex: 0 0 85%;
-  scroll-snap-align: center;
-}
-/* Tablet: ~2 tarjetas visibles */
-@media (min-width: 640px) {
-  .carousel-track > * { flex-basis: 55%; }
-}
-/* Escritorio: ~3 tarjetas visibles, con movimiento */
+/* En escritorio ocultamos los clones del carrusel infinito */
 @media (min-width: 1024px) {
-  .carousel-track { scroll-padding-inline: 0; }
-  .carousel-track > * { flex-basis: 31.5%; }
+  .carousel-clone { display: none !important; }
+}
+
+/* ============================================================
+   Marquee (opiniones que se mueven solas horizontalmente)
+   ============================================================ */
+.marquee {
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-track > * {
+  flex: 0 0 340px;
+  max-width: 85vw;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .marquee { -webkit-mask-image: none; mask-image: none; overflow-x: auto; }
 }
 
 /* Controles (flechas + puntos) */

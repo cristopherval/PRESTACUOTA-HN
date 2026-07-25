@@ -4,8 +4,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ---------- Carrusel infinito con auto-desplazamiento (planes y testimonios) ----------
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ---------- Carrusel infinito de planes (deslizable, solo en celular) ----------
+  const mqCarousel = window.matchMedia('(max-width: 1023px)');
 
   document.querySelectorAll('[data-carousel]').forEach((track) => {
     const originals = Array.from(track.children);
@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     originals.forEach((el) => track.appendChild(cloneCard(el)));        // set posterior
     originals.slice().reverse().forEach((el) => track.insertBefore(cloneCard(el), track.firstChild)); // set anterior
 
-    // Controles: flechas + puntos (visibles en todos los tamaños)
+    // Controles: flechas + puntos (solo visibles en celular vía .lg\:hidden)
     const nav = document.createElement('div');
-    nav.className = 'carousel-nav';
+    nav.className = 'carousel-nav lg:hidden';
     const prev = document.createElement('button');
     prev.type = 'button';
     prev.className = 'carousel-arrow';
@@ -91,48 +91,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 130);
     }, { passive: true });
 
-    // ----- Auto-desplazamiento (pausa al interactuar / hover / pestaña oculta) -----
-    let autoTimer = null;
-    const AUTO_MS = 4500;
-    const startAuto = () => {
-      if (reduceMotion || autoTimer) return;
-      autoTimer = setInterval(() => {
-        track.scrollBy({ left: cardStep, behavior: 'smooth' });
-      }, AUTO_MS);
-    };
-    const stopAuto = () => { clearInterval(autoTimer); autoTimer = null; };
-    const restartAuto = () => { stopAuto(); startAuto(); };
-
-    const goPrev = () => { track.scrollBy({ left: -cardStep, behavior: 'smooth' }); restartAuto(); };
-    const goNext = () => { track.scrollBy({ left: cardStep, behavior: 'smooth' }); restartAuto(); };
-    prev.addEventListener('click', goPrev);
-    next.addEventListener('click', goNext);
+    prev.addEventListener('click', () => track.scrollBy({ left: -cardStep, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: cardStep, behavior: 'smooth' }));
     dots.forEach((d, i) => d.addEventListener('click', () => {
       track.scrollTo({ left: setWidth + i * cardStep, behavior: 'smooth' });
-      restartAuto();
     }));
 
-    // Pausas
-    track.addEventListener('mouseenter', stopAuto);
-    track.addEventListener('mouseleave', startAuto);
-    track.addEventListener('pointerdown', stopAuto);
-    track.addEventListener('touchstart', stopAuto, { passive: true });
-    track.addEventListener('touchend', restartAuto, { passive: true });
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stopAuto(); else startAuto();
+    const sync = () => { if (mqCarousel.matches) requestAnimationFrame(center); };
+    sync();
+    window.addEventListener('resize', () => requestAnimationFrame(sync));
+    window.addEventListener('load', () => { if (mqCarousel.matches) center(); });
+  });
+
+  // ---------- Marquee de opiniones (se mueven solas horizontalmente) ----------
+  document.querySelectorAll('[data-marquee]').forEach((viewport) => {
+    const trackEl = viewport.querySelector('.marquee-track');
+    if (!trackEl) return;
+    const originals = Array.from(trackEl.children);
+    if (originals.length < 2) return;
+
+    // Duplicar el set para que el bucle (translateX -50%) sea perfecto
+    originals.forEach((el) => {
+      const c = el.cloneNode(true);
+      c.classList.remove('reveal', 'visible');
+      c.removeAttribute('data-reveal');
+      c.removeAttribute('data-delay');
+      c.style.opacity = '1';
+      c.style.transform = 'none';
+      c.setAttribute('aria-hidden', 'true');
+      trackEl.appendChild(c);
     });
 
-    // Init + recalcular al cambiar tamaño / cargar imágenes
-    const init = () => { center(); };
-    requestAnimationFrame(init);
-    window.addEventListener('load', () => { center(); startAuto(); });
-    let resizeTimer = null;
+    // Velocidad constante (~55 px/seg) según el ancho de un set
+    const setSpeed = () => {
+      const setWidth = trackEl.scrollWidth / 2;
+      const duration = Math.max(18, Math.round(setWidth / 55));
+      trackEl.style.setProperty('--marquee-duration', duration + 's');
+    };
+    setSpeed();
+    window.addEventListener('load', setSpeed);
+    let mResize = null;
     window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(center, 150);
+      clearTimeout(mResize);
+      mResize = setTimeout(setSpeed, 200);
     });
-
-    startAuto();
   });
 
   // ---------- Menú móvil ----------
